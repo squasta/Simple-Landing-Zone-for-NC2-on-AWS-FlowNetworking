@@ -24,7 +24,7 @@ For additional information about creating manually your AWS for Nutanix Cloud Cl
 
 If you want to use [**Nutanix Flow Networking**](https://portal.nutanix.com/page/documents/solutions/details?targetId=TN-2028-Nutanix-Cloud-Clusters-on-AWS:flow-virtual-networking-on-aws.html) integration available in AOS 6.8 or more, this is the basic landing zone.
 
-If you want to use [**AHV Native AWS VPC integration**](https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Clusters-AWS:aws-clusters-aws-nc2-on-aws-architecture-c.html), then [check this repo](https://github.com/squasta/Simple-Landing-Zone-for-NC2-on-AWS).
+If you want to use [**AHV Native AWS VPC integration**](https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Clusters-AWS:aws-clusters-aws-nc2-on-aws-architecture-c.html), then [check this repo](https://github.com/squasta/Simple-Landing-Zone-for-NC2-on-AWS/tree/main).
  
 
 <img width='800' src='./images/LZ-NC2AWS-FlowNetwork.png'/>  
