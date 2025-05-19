@@ -1,5 +1,5 @@
 # Simple-Landing-Zone-for-NC2-on-AWS
-This repo contains terraform code to deploy a simple network landing zone for Nutanix Cloud Cluster (NC2) on AWS
+This repo contains terraform code to deploy a simple network landing zone for Nutanix Cloud Cluster (NC2) on AWS (configured with Nutanix Flow Networking)
 
 <img width='400' src='./images/PlaneLZ.jpeg'/> 
 
@@ -29,7 +29,7 @@ If you want to use [**AHV Native AWS VPC integration**](https://portal.nutanix.c
 
 <img width='800' src='./images/LZ-NC2AWS-FlowNetwork.png'/>  
 
-IP ranges here are for example, you can define yours.
+IP ranges here are for example, you can define yours by editing [configuration.tfvars](configuration.tfvars).
 
 This landing zone also include the option to have a dedicated subnet and a virtual machine to use as a jumbox. All AWS resources related to Jumbox are in [jumbox.tf](jumbox.tf) file.
 
