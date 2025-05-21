@@ -31,6 +31,8 @@ If you want to use [**AHV Native AWS VPC integration**](https://portal.nutanix.c
 
 IP ranges here are for example, you can define yours by editing [configuration.tfvars](configuration.tfvars).
 
+A VPC Endpoint S3 Gateway can be enabled to make the solution more cost effective for secure, private acces. Traffic from your VPC to S3 is routed directly via AWS’s internal network, which can result in lower latency and higher throughput compared to going through an internet gateway or NAT device.
+
 This landing zone also include the option to have a dedicated subnet and a virtual machine to use as a jumbox. All AWS resources related to Jumbox are in [jumbox.tf](jumbox.tf) file.
 
 <img width='800' src='./images/LZ-NC2AWS-FlowNetwork-withJumbox.png'/>  
@@ -69,7 +71,7 @@ If you don't need a Jumpbox VM and its associated resources, you can delete [jum
 To get AMI ID  for the Windows Server Jumbox in the choosen region :
 
 ```bash
-aws ec2 describe-images --region eu-central-1 --owners amazon --filters "Name=name,Values=Windows_Server-2022-English-Full-Base-*" "Name=state,Values=available" --query "Images | sort_by(@, &CreationDate) | [-1].ImageId" --output text
+aws ec2 describe-images --region eu-central-1 --owners amazon --filters "Name=name,Values=Windows_Server-2025-English-Full-Base-*" "Name=state,Values=available" --query "Images | sort_by(@, &CreationDate) | [-1].ImageId" --output text
 ```
 
 <img width='800' src='./images/AWSCLI-GetAMIID.png'/>  
