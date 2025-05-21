@@ -67,6 +67,14 @@ variable "PRIVATE_SUBNET_JUMPBOX" {
 # to get latest Windows Server AMI ID, visit https://aws.amazon.com/windows/ and click on "Launch instance"
 # aws ec2 describe-images --region eu-central-1 --owners amazon --filters "Name=name,Values=Windows_Server-2022-English-Full-Base-*" "Name=state,Values=available" --query "Images | sort_by(@, &CreationDate) | [-1].ImageId" --output text
 variable "WINDOWS_SERVER_2025_ENGLISHFULLBASE_AMI_ID" {
-  description = "The AMI ID for the Windows Server 2022 English Full Base image"
-  default     = "ami-0b6f453078047c11b"
+  description = "The AMI ID for the Windows Server 2025 English Full Base image"
+  default     = "ami-05e885aafb1fdb4dd"
+}
+
+# Enable or disable the creation of the VPC Endpoint Gateway S3
+# This is used to access S3 buckets from the private subnets
+variable "ENABLE_VPC_ENDPOINT_S3" {
+  description = "Enable or disable the creation of the VPC Endpoint Gateway S3"
+  type        = number
+  default     = 0
 }
