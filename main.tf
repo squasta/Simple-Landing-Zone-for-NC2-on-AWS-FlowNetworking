@@ -47,11 +47,11 @@ resource "aws_subnet" "Terra-Public-Subnet" {
   vpc_id                  = aws_vpc.Terra-VPC.id
   cidr_block              = var.PUBLIC_SUBNET_CIDR  # CIDR requirements: /16 and /23 including both
                                             # a /28 CIDR should be enough. It's the value used if VPC is created through NC2 portal wizard
-  availability_zone       = join("", [var.AWS_REGION,"a"])                
+  availability_zone       = join("", [var.AWS_REGION,var.AWS_AVAILABILITY_ZONE])                
   map_public_ip_on_launch = true
 
   tags = {
-    Name = join("", ["NC2-PublicSubnet-",var.AWS_REGION,"a"])
+    Name = join("", ["NC2-PublicSubnet-",var.AWS_REGION,var.AWS_AVAILABILITY_ZONE])
   }
 }
 
@@ -64,10 +64,10 @@ resource "aws_subnet" "Terra-Private-Subnet-Mngt" {
   vpc_id                  = aws_vpc.Terra-VPC.id
   cidr_block              = var.PRIVATE_SUBNET_MGMT_CIDR   # CIDR requirements: /16 and /25 including both
                                              # a /25 CIDR should be enough. It's the value used if VPC is created through NC2 portal wizard
-  availability_zone       = join("", [var.AWS_REGION,"a"])                 
+  availability_zone       = join("", [var.AWS_REGION,var.AWS_AVAILABILITY_ZONE])                 
 
   tags = {
-    Name = join("", ["NC2-PrivateMgntSubnet-",var.AWS_REGION,"a"])
+    Name = join("", ["NC2-PrivateMgntSubnet-",var.AWS_REGION,var.AWS_AVAILABILITY_ZONE])
   }
 }
 
@@ -81,11 +81,11 @@ resource "aws_subnet" "Terra-Private-Subnet-Mngt" {
 resource "aws_subnet" "Terra-Private-Subnet-PC" {
   vpc_id                  = aws_vpc.Terra-VPC.id
   cidr_block              = var.PRIVATE_SUBNET_PC  # CIDR requirements: /16 and /25 including both
-  availability_zone       = join("", [var.AWS_REGION,"a"])                       
+  availability_zone       = join("", [var.AWS_REGION,var.AWS_AVAILABILITY_ZONE])                      
 
   tags = {
     ## join function https://developer.hashicorp.com/terraform/language/functions/join
-    Name = join("", ["NC2-PrivateSubnet-PC-",var.AWS_REGION,"a"])
+    Name = join("", ["NC2-PrivateSubnet-PC-",var.AWS_REGION,var.AWS_AVAILABILITY_ZONE])
   }
 }
 
@@ -100,11 +100,11 @@ resource "aws_subnet" "Terra-Private-Subnet-PC" {
 resource "aws_subnet" "Terra-Private-Subnet-FVN" {
   vpc_id                  = aws_vpc.Terra-VPC.id
   cidr_block              = var.PRIVATE_SUBNET_FVN  # CIDR requirements: /16 and /25 including both
-  availability_zone       = join("", [var.AWS_REGION,"a"])                       
+  availability_zone       = join("", [var.AWS_REGION,var.AWS_AVAILABILITY_ZONE])                      
 
   tags = {
     ## join function https://developer.hashicorp.com/terraform/language/functions/join
-    Name = join("", ["NC2-PrivateSubnet-FVN-",var.AWS_REGION,"a"])
+    Name = join("", ["NC2-PrivateSubnet-FVN-",var.AWS_REGION,var.AWS_AVAILABILITY_ZONE])
   }
 }
 
@@ -199,13 +199,24 @@ resource "aws_route_table" "Terra-Private-Route-Table" {
     cidr_block = "0.0.0.0/0"
     nat_gateway_id = aws_nat_gateway.Terra-AWS-NAT-GW.id
   }
-  ##### IMPORTANT #####
-  # Insert here you internal routes to on-premises network or other networks (AWS Transit Gateway, etc.)
-  # propagating_vgws = [aws_vpn_gateway.Terra-VPN-GW.id]  # if you have a VPN connection to on-premises network
+
+  # this block should not be useful because we propagate VPN Gateway routes to the private route table
+  # # Route to on-premises network via VPN
+  # route {
+  #   cidr_block = var.ON_PREM_CIDR
+  #   gateway_id = aws_vpn_gateway.Terra-VPN-GW.id
+  # }
 
   tags = {
     Name = "NC2-Route-Table-Private"
   }
+}
+
+# Main Route Table Association for the VPC to the Private Route Table
+# cf. https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/main_route_table_association
+resource "aws_main_route_table_association" "Terra-Main-Route-Table-Association" {
+  vpc_id         = aws_vpc.Terra-VPC.id
+  route_table_id = aws_route_table.Terra-Private-Route-Table.id
 }
 
 
@@ -255,17 +266,6 @@ resource "aws_vpc_endpoint" "Terra-VPC-Endpoint-S3" {
   }
 }
 
-# VPC Endpoint for EC2
-# cf. https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_endpoint
-# resource "aws_vpc_endpoint" "ec2" {
-#   vpc_id            = aws_vpc.Terra-VPC.id
-#   service_name      = join("", ["com.amazonaws.",var.AWS_REGION,".ec2"])   # ex: "com.amazonaws.us-west-2.ec2"
-#   vpc_endpoint_type = "Interface"
-#   # security_group_ids = [
-#   #   aws_security_group.sg1.id,
-#   # ]
-#   private_dns_enabled = true
-# }
 
 ###################################################################
 

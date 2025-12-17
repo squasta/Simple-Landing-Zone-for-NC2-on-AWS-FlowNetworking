@@ -1,3 +1,14 @@
+#  __      __        _       _     _           
+#  \ \    / /       (_)     | |   | |          
+#   \ \  / /_ _ _ __ _  __ _| |__ | | ___  ___ 
+#    \ \/ / _` | '__| |/ _` | '_ \| |/ _ \/ __|
+#     \  / (_| | |  | | (_| | |_) | |  __/\__ \
+#      \/ \__,_|_|  |_|\__,_|_.__/|_|\___||___/
+#
+#### VARIABLES DEFINITION with default values
+#### please enter or check your values in configuration.tfvar   
+
+
 
 variable "VPC_NAME" {
   description = "The name of the VPC"
@@ -7,6 +18,11 @@ variable "VPC_NAME" {
 variable "AWS_REGION" {
   description = "The AWS region to deploy to"
   default     = "us-west-2"     # eu-west-3	= Paris Region
+}
+
+variable "AWS_AVAILABILITY_ZONE" {
+  description = "The AWS availability zone to deploy to"
+  default     = "a"  # possible values : a,b,c...
 }
 
 # Key Pair Name for EC2 Jumbox instances
@@ -63,13 +79,14 @@ variable "PRIVATE_SUBNET_JUMPBOX" {
   default     = "10.0.6.0/24"  
 }
 
-# Windows Server 2022 English Full Base AMI ID for Jumbox VM
-# to get latest Windows Server AMI ID, visit https://aws.amazon.com/windows/ and click on "Launch instance"
-# aws ec2 describe-images --region eu-central-1 --owners amazon --filters "Name=name,Values=Windows_Server-2022-English-Full-Base-*" "Name=state,Values=available" --query "Images | sort_by(@, &CreationDate) | [-1].ImageId" --output text
-variable "WINDOWS_SERVER_2025_ENGLISHFULLBASE_AMI_ID" {
-  description = "The AMI ID for the Windows Server 2025 English Full Base image"
-  default     = "ami-05e885aafb1fdb4dd"
-}
+# # NOT USED ANYMORE
+# # Windows Server 2022 English Full Base AMI ID for Jumbox VM
+# # to get latest Windows Server AMI ID, visit https://aws.amazon.com/windows/ and click on "Launch instance"
+# # aws ec2 describe-images --region eu-central-1 --owners amazon --filters "Name=name,Values=Windows_Server-2022-English-Full-Base-*" "Name=state,Values=available" --query "Images | sort_by(@, &CreationDate) | [-1].ImageId" --output text
+# variable "WINDOWS_SERVER_2025_ENGLISHFULLBASE_AMI_ID" {
+#   description = "The AMI ID for the Windows Server 2025 English Full Base image"
+#   default     = "ami-0a37fced109d0e4ec" # Example for us-west-1
+# }
 
 # Enable or disable the creation of the VPC Endpoint Gateway S3
 # This is used to access S3 buckets from the private subnets
@@ -78,3 +95,21 @@ variable "ENABLE_VPC_ENDPOINT_S3" {
   type        = number
   default     = 0
 }
+
+# Enable the creation of a Jumpbox VM
+# 0 = disabled, 1 = enabled
+variable "ENABLE_JUMBOX_VM" {
+  type = number
+  description = "Enable Azure Bastion"
+  default = 0
+}
+
+
+# Enable the Network Load Balancer for the Jumpbox VM
+# 0 = disabled, 1 = enabled
+variable "ENABLE_NLB_JUMBOX_VM" {
+  type = number
+  description = "Enable Network Load Balancer for Jumpbox"
+  default = 0
+}
+
